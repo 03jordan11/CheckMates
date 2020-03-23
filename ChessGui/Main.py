@@ -1,6 +1,5 @@
 import tkinter as tk
 from PIL import ImageTk, Image
-import time
 import copy
 root = tk.Tk()
 
