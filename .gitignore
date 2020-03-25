@@ -4,3 +4,10 @@ ChessGui/.vs/slnx.sqlite
 ChessGui/.vscode/settings.json
 ChessGui/.vs/ProjectSettings.json
 ChessGui/.vs/VSWorkspaceState.json
+Chess Game/__pycache__/Board.cpython-38.pyc
+Chess Game/__pycache__/Camera.cpython-38.pyc
+Chess Game/__pycache__/ChessEng.cpython-38.pyc
+Chess Game/__pycache__/Game.cpython-38.pyc
+Chess Game/__pycache__/initialize_Board.cpython-38.pyc
+Chess Game/__pycache__/Line.cpython-38.pyc
+Chess Game/__pycache__/Square.cpython-38.pyc
