@@ -1,5 +1,6 @@
-### <a name="install"></a>Installing 
+<img src="./UI workflow.png" width="700" >
 
+### <a name="install"></a>Installing 
 
 **Install *COVID-19 Tracking System***:
 1. Download the "Chess Game" zip file.
