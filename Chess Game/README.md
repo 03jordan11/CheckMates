@@ -2,7 +2,7 @@
 
 ### <a name="install"></a>Installing 
 
-**Install *COVID-19 Tracking System***:
+**Install:
 1. Download the "Chess Game" zip file.
 2. Unzip the zipfile
 
