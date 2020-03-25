@@ -1,9 +1,6 @@
 ### <a name="install"></a>Installing 
 
 
-**Required software:**
-
-
 **Install *COVID-19 Tracking System***:
 1. Download the "Chess Game" zip file.
 2. Unzip the zipfile
@@ -28,23 +25,3 @@ self.engine = chess.engine.SimpleEngine.popen_uci(""your own path"/Chess Game/st
 ```
 python3 OOPGUI_revised.py 
 ``` 
-
-
-```python
-
-```
-
-
-```python
-
-```
-
-
-```python
-
-```
-
-
-```python
-
-```
