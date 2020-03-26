@@ -16,13 +16,15 @@
 
 For example, 'stockfish-11-64' under 'Mac'(for Mac) folder, 'stockfish_20011801_x64' under 'Windows'(for Windows) folder.
 
-3. Copy or Move the excutable to the the 'Chess Game' folder
+3. Copy or Move the excutable to the 'Chess Game' folder
 
 4. Go to "ChessEng.py"
+
 5. Find the following line:
 ```
 self.engine = chess.engine.SimpleEngine.popen_uci("/Users/dongchenye/Desktop/Senior Design/Chess Game/stockfish-11-64")
 ```
+
 6. change the path into your own path:
 ```
 self.engine = chess.engine.SimpleEngine.popen_uci(""your_own_path"/Chess Game/stockfish_excutable_name")
