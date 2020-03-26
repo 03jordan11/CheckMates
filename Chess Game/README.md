@@ -10,15 +10,21 @@
 ### <a name="running"></a> Running 
 
 #### Important Note 1 (before runing): 
+1. Go to [Stockfish official site](https://stockfishchess.org/download/), choose one of the "Engine Binaries", download the stockfish file.
 
-1. Go to "ChessEng.py"
-2. Find the following line:
+2. Unzip the download file, find an excutable under folder name like 'Mac'(for Mac) or 'Windows'(for Windows)
+For example, 'stockfish-11-64' under 'Mac'(for Mac) folder, 'stockfish_20011801_x64' under 'Windows'(for Windows) folder.
+
+3. Copy or Move the excutable to the the 'Chess Game' folder
+
+4. Go to "ChessEng.py"
+5. Find the following line:
 ```
 self.engine = chess.engine.SimpleEngine.popen_uci("/Users/dongchenye/Desktop/Senior Design/Chess Game/stockfish-11-64")
 ```
-3. change the path into your own path:
+6. change the path into your own path:
 ```
-self.engine = chess.engine.SimpleEngine.popen_uci(""your own path"/Chess Game/stockfish-11-64")
+self.engine = chess.engine.SimpleEngine.popen_uci(""your_own_path"/Chess Game/stockfish_excutable_name")
 ```
 #### Important Note 2 (before runing): 
 
