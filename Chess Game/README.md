@@ -13,6 +13,7 @@
 1. Go to [Stockfish official site](https://stockfishchess.org/download/), choose one of the "Engine Binaries", download the stockfish file.
 
 2. Unzip the download file, find an excutable under folder name like 'Mac'(for Mac) or 'Windows'(for Windows)
+
 For example, 'stockfish-11-64' under 'Mac'(for Mac) folder, 'stockfish_20011801_x64' under 'Windows'(for Windows) folder.
 
 3. Copy or Move the excutable to the the 'Chess Game' folder
@@ -30,7 +31,9 @@ self.engine = chess.engine.SimpleEngine.popen_uci(""your_own_path"/Chess Game/st
 
 By default, in the `OOPGUI_revised.py` file, the test mode is on : `test_flag = True`.
 When test mode is on, this will ignore the camera input, and ask the player input on command line.
+
 For example: 
+
 when the "PlayerMovePage" is displayed, click "Done" buttom, then on command line, it will ask you for input.`Please input your next move (ex: 'e2e4'):`. And display the board, after the move is made.
 
 If you want to turn off the test mode, go to `OOPGUI_revised.py` file, change 'test_flag' from 'True' to 'False' 
