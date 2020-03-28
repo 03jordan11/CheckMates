@@ -6,11 +6,11 @@
 import tkinter as tk
 from tkinter import *
 from Game import Game
-
+from Speaker import Speaker
 # set font sizes
 LARGE_FONT = ("system", 20)
-MED_FONT = ("system", 12)
-SMALL_FONT = ("system", 8)
+MED_FONT = ("system", 15)
+SMALL_FONT = ("system", 10)
 
 
 test_flag = True
@@ -30,7 +30,9 @@ class Application(tk.Tk):
 		container.grid_columnconfigure(0, weight = 1)
 
 		self.frames = {}
-
+        
+		self.speaker = Speaker(test_flag)
+        
 		self.game = Game(test_flag)
 
 		# holds ReadyGo move information to be displayed in ReadyGoMovePage
@@ -201,7 +203,7 @@ class PlayerMovePage(tk.Frame):
 
 		# set button that ends game. Shows game over page with ReadyGo as winner
 		ResignButton = tk.Button(self, text = "Resign",font = SMALL_FONT,
-						command = lambda : controller.show_frame(GameOverPage))
+						command = lambda : [controller.show_frame(GameOverPage),controller.speaker.GameOver(controller.winner.get())])
 		PlayerButton.pack()
 		ResignButton.pack()
 
@@ -212,15 +214,16 @@ class PlayerMovePage(tk.Frame):
 		'''
 
 		if controller.game.over:
-			controller.winner.set(contoller.game.winner)
+			controller.winner.set(controller.game.winner)
+			controller.speaker.GameOver(controller.winner.get())  
 			controller.show_frame(GameOverPage)
             
 ##		elif controller.game.board.promo:
 ##			controller.show_frame(ChoosePromotionPage)
 
 		elif controller.game.PlayerMoveError:
-			print('Display "PlayerMoveErrorPage"')
 			controller.game.current = controller.game.previous
+			controller.speaker.PlayerMoveError()  
 			controller.show_frame(PlayerMoveErrorPage)
 		else:
 			print('\nPlayer move: ',controller.game.chessEngine.PlayerLastMove)
@@ -256,14 +259,17 @@ class ReadyGoMovePage(tk.Frame):
 		'''
 		Performs various checks on move validity and board circumstances.
 		Shows the appropriate window given the conditions
-		'''
+		'''     
 		if controller.game.over:
 			controller.winner.set(controller.game.winner)
-			controller.show_frame(GameOverPage)
+			controller.speaker.GameOver(controller.winner.get())  
+			controller.show_frame(GameOverPage)        
 		elif controller.game.isCheck:
-			controller.show_frame(CheckPage)          
+			controller.speaker.inCheck()
+			controller.show_frame(CheckPage)  
 		elif controller.game.ReadyGoMoveError:
 			controller.game.current = controller.game.previous
+			controller.speaker.ReadyGoMoveError()     
 			controller.show_frame(ReadyGoMoveErrorPage)
 		else:
 			print('\nReadyGo move: ',controller.game.chessEngine.ReadyGoLastMove)
@@ -287,7 +293,9 @@ class CheckPage(tk.Frame):
 		setBoardButton = tk.Button(self, text = "Proceed",font = MED_FONT,
 								command = lambda : controller.show_frame(PlayerMovePage))
 		setBoardButton.pack()
-
+        
+        
+        
 class ReadyGoMoveErrorPage(tk.Frame):
 	'''
 	Alerts user that the move they made is not the same as the ReadyGo requested
@@ -304,8 +312,8 @@ class ReadyGoMoveErrorPage(tk.Frame):
 		# set button that shows ReadyGoMovePage
 		setBoardButton = tk.Button(self, text = "Try Again",font = MED_FONT,
 						command = lambda : controller.show_frame(ReadyGoMovePage))
-		setBoardButton.pack()
-
+		setBoardButton.pack()   
+        
 
 class PlayerMoveErrorPage(tk.Frame):
 	'''
@@ -324,14 +332,15 @@ class PlayerMoveErrorPage(tk.Frame):
 		setBoardButton = tk.Button(self, text = "Try Again", font = MED_FONT,
 						command = lambda : controller.show_frame(PlayerMovePage))
 		setBoardButton.pack()
-
+         
+        
 class GameOverPage(tk.Frame):
 	'''
 	Shows the winner of the game
 	'''
 
 	def __init__(self,parent,controller):
-
+        
 		tk.Frame.__init__(self,parent)
 
 		# set label
@@ -342,7 +351,7 @@ class GameOverPage(tk.Frame):
 		label.pack(pady = 10, padx = 10)
 		self.winnerLabel.pack(pady = 10, padx = 10)
 
-
+        
 '''
 class ChoosePromotionPage(tk.Frame):
 	
