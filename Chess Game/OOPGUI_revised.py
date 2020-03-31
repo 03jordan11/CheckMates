@@ -35,7 +35,7 @@ class Application(tk.Tk):
 
 		self.frames = {}
         
-		self.speaker = Speaker(test_flag)
+		self.speaker = Speaker(True)
         
 		self.game = Game(test_flag)
         
@@ -270,7 +270,9 @@ class GamePage(tk.Frame):
 			self.ResignButton.configure(state=DISABLED)
 
 	def LoopGame(self,controller):
-		if self.turn == 'Player': 
+		if controller.game.over:
+			return
+        if self.turn == 'Player':
 			'''
 			Prompts player to move
 			'''
