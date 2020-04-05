@@ -16,7 +16,7 @@ class ChessEng:
 		Creates chessboard, local chess engine stockfish, and initiates UCI protocol
 		'''
 		self.engBoard = chess.Board()
-		self.engine = chess.engine.SimpleEngine.popen_uci("/Users/dongchenye/Desktop/Senior Design/CheckMates-master/Chess Game/stockfish-11-64")
+		self.engine = chess.engine.SimpleEngine.popen_uci("/Users/dongchenye/Desktop/SeniorDesign/CheckMates/ChessGame/stockfish-11-64")
 		self.depth = 0
 		self.PlayerLastMove = ''
 		self.ReadyGoLastMove = ''

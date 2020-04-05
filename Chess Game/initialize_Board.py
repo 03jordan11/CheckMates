@@ -13,11 +13,6 @@ class initialize_Board:
 	This class handles the initialization of the board. It analyzes
 	the empty board finding its border, lines, corners, squares...
     
-    Input:
-            camera
-            test_flag
-    Output:
-            board
 	'''
 
 	def __init__(self, camera, test_flag):
@@ -33,6 +28,10 @@ class initialize_Board:
 		while len(corners) < 81:
 		# Call the camera to take picture
 			image = self.cam.takePicture()
+			if self.test_flag:
+				img = cv2.imread("./test_image/empty_board.bmp")
+				image = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+
 			image = imutils.resize(image, width=500, height = 500)
 			## Find corners
 			corners = self.findCorners(image)
@@ -97,16 +96,22 @@ class initialize_Board:
 		extracted = np.zeros_like(image)
 		extracted[mask == 255] = image[mask == 255]
 		# remove strip around edge
-		extracted[np.where((extracted == [125, 125, 125]).all(axis=2))] = [0, 0, 20]
+		extracted[np.where((extracted == [125, 125, 125]).all(axis=2))] = [0, 0, 0]
 
 		mask = extracted
+		if self.test_flag:
+			cv2.imwrite("Mask image.png", mask)
 
 		# Find the Edges
-		board_edges = cv2.Canny(mask,300,1000)
+		board_edges = cv2.Canny(mask,400,1000)
 
-		edges = cv2.Canny(mask,100,150) - board_edges
+		edges = cv2.Canny(mask,200,600) - board_edges
 
 		colorEdges = cv2.cvtColor(edges,cv2.COLOR_GRAY2BGR)
+		
+
+		if self.test_flag:
+			cv2.imwrite("Edge image.png", colorEdges)
 
 		# Find the Lines
 

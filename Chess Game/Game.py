@@ -45,16 +45,21 @@ class Game:
 		'''
 		Calls initialize_Board to take image and initialize Board
 		'''
-		print('controller.game.analyzeBoard() Successfully ')
 		boardRec = initialize_Board(self.camera,self.test_flag)
 		self.board = boardRec.create_board()
 		self.board.assignState()
+		print('controller.game.analyzeBoard() Successfully ')
         
 	def checkBoardIsSet(self):
 		'''
 		Takes inital picture of set board
 		'''	
 		self.current = self.camera.takePicture()
+		if self.test_flag:
+			img = cv2.imread("./test_image/board_set.bmp")
+			image = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+			image = imutils.resize(image, width=500, height = 500)
+			self.current = image
 		print('controller.game.checkBoardIsSet() Successfully')
               
 	def playerMove(self):
@@ -62,11 +67,22 @@ class Game:
 		Compares previous Board to current board to determine the movement made by the player
 		'''
 		self.previous = self.current
+
 		self.current = self.camera.takePicture()
-		move = self.board.determineChanges(self.previous,self.current)
-        
 		if self.test_flag:
-			move=input("Please input your next move (ex: 'e2e4'):")
+			img = cv2.imread("./test_image/board_set.bmp")
+			image = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+			image = imutils.resize(image, width=500, height = 500)
+			self.previous = image
+            
+			img = cv2.imread("./test_image/test_move1.bmp")
+			image = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+			image = imutils.resize(image, width=500, height = 500)
+			self.current = image           
+		move = self.board.determineChanges(self.previous,self.current)
+		print(move)
+        
+
             
 		code = self.chessEngine.updateMove(move)
 		if code == 1:
@@ -74,10 +90,7 @@ class Game:
 			self.PlayerMoveError = True
 		else:
 			self.PlayerMoveError = False
-			# write to Game.txt file
-			#f = open("Game.txt", "a+")
-			#f.write(chess.Move.from_uci(move).uci() + "\r\n")
-			#f.close()
+
 		# check for Game Over
 		if  self.chessEngine.engBoard.is_checkmate():
 			self.winner = "You win!"

@@ -3,7 +3,7 @@
 
 #!/usr/bin/env python
 # coding: utf-8
-
+import sys
 from PIL import ImageTk, Image
 import PIL.Image
 import copy
@@ -16,6 +16,8 @@ LARGE_FONT = ("system", 20)
 MED_FONT = ("system", 15)
 SMALL_FONT = ("system", 10)
 
+BOLD_LAR_FONT=('Helvetica', 25, 'bold')
+BOLD_MED_FONT = ('Helvetica',18 , 'bold')
 
 test_flag = True
 
@@ -51,11 +53,8 @@ class Application(tk.Tk):
 
 		# Give page objects to Application to show frame
         
-#!!		for F in (StartGamePage, InitializeBoardPage,SetBoardPage, ChooseColorPage,
-#!!				ChooseDifficultyPage, ReadyGoMovePage, PlayerMovePage, CheckPage,
-#!!				ReadyGoMoveErrorPage, GameOverPage, PlayerMoveErrorPage, ChoosePromotionPage):
 		for F in (StartGamePage, InitializeBoardPage,SetBoardPage,
-				ChooseDifficultyPage,ChooseColorPage,GamePage,ChessGui,GameOverPage):
+				ChooseDifficultyPage,ChooseColorPage,GamePage,ChessGui):
 
 			frame = F(container, self)
 			self.frames[F] = frame
@@ -177,16 +176,14 @@ class ChooseColorPage(tk.Frame):
 		label.pack(pady = 10, padx = 10)
 
 		# set button that takes you to PlayerMovePage since the Player will go first  
-#		whiteButton = tk.Button(self, text = "White",font = MED_FONT,
-#					command = lambda: [self.setColor(controller,"White"),controller.show_frame(PlayerMovePage)])
+
 		whiteButton = tk.Button(self, text = "White",font = MED_FONT,
 					command = lambda: [self.setColor(controller,"White"),controller.show_frame(GamePage)])
 		whiteButton.pack()
 
 		# set button that takes you to ReadyGoMovePage since Ready will go first
 		# gets a default move from ReadyGo and displays it in the next window
-#		blackButton = tk.Button(self, text = "Black",font = MED_FONT,
-#					command = lambda : [self.setColor(controller,"Black"),controller.show_frame(ReadyGoMovePage),controller.move.set(controller.game.ReadyGoMove())])
+
 		blackButton = tk.Button(self, text = "Black",font = MED_FONT,
 					command = lambda : [self.setColor(controller,"Black"),controller.move.set(controller.game.ReadyGoMove()),controller.show_frame(GamePage)])
 		blackButton.pack()
@@ -214,36 +211,35 @@ class GamePage(tk.Frame):
 		self.BeginGameButton = tk.Button(self, text = "Begin the Game!",font = LARGE_FONT,command = lambda : [self.ProcessGame(controller)])
 		self.BeginGameButton.pack()
         
-		self.Mainlabel = tk.Label(self, text = "Main Game", font = LARGE_FONT)
+		self.Mainlabel = tk.Label(self, text = "Main Game", font = BOLD_LAR_FONT)
         
 		# set color label with current color played 
 		self.colorlabel = tk.Label(self, text= "", font = MED_FONT)
         
 		# set label
-		self.label = tk.Label(self,text = "", font = LARGE_FONT)
+		self.label = tk.Label(self,text = "", font = BOLD_MED_FONT)
 
 		# set dynamic label with ReadyGo move
-		self.moveLabel = tk.Label(self, textvariable = controller.move, font = MED_FONT)      
+		self.moveLabel = tk.Label(self, textvariable = controller.move, font = BOLD_MED_FONT)      
         
 		# set button that updates player move and checks the moves validity and board circumstances
 		self.DoneButton = tk.Button(self, text = "Done",font = MED_FONT)
 
-		# set button that ends game. Shows game over page with ReadyGo as winner
-		self.ResignButton = tk.Button(self, text = "Resign",font = MED_FONT,command = lambda : [controller.show_frame(GameOverPage),controller.speaker.GameOver(controller.winner.get())])
-        
+		self.ResignButton = tk.Button(self, text = "Resign",font = MED_FONT,command = lambda : [controller.speaker.GameOver(controller.winner.get()),self.GameOverWindow(controller)])        
 
+        
 	def ProcessGame(self,controller):  
 
 		self.BeginGameButton.pack_forget()
-        
-		self.Mainlabel.pack(pady = 10, padx = 10)
-		self.colorlabel.pack(pady = 10, padx = 10)        
-		self.label.pack(pady = 10, padx = 10)        
-		self.moveLabel.pack(pady = 10, padx = 10)  
-		self.DoneButton.pack()
-		self.ResignButton.pack()   
+		self.Mainlabel.grid(row=0, column=1,columnspan=18)
+		self.colorlabel.grid(row=5, column=1,columnspan=8)
+		self.label.grid(row=6, column=1,columnspan=8)        
+		self.moveLabel.grid(row=7, column=1,columnspan=5) 
+		self.DoneButton.grid(row=8, column=3) 
+		self.ResignButton.grid(row=8, column=4) 
+		self.chessGui.grid(row=4, column=10,columnspan=9, rowspan=9,sticky=W+E+N+S)         
+ 
 		self.chessGui.InitializeBoard() 
-		self.chessGui.pack()
         
 		self.turn = ''
 		color = controller.PlayerColor.get()
@@ -256,8 +252,6 @@ class GamePage(tk.Frame):
 			self.colorlabel.configure(text = controller.PlayerColor.get())
 			self.label.configure(text = "Your Turn") 
 			controller.move.set("")
-#			self.moveLabel.configure(test="")
-#			self.moveLabel.configure(text = "")  
 			self.DoneButton.config(command = lambda :[controller.game.playerMove(),self.checkPlayerValid(controller),self.LoopGame(controller)])
             
 			self.ResignButton.configure(state=NORMAL)
@@ -265,14 +259,13 @@ class GamePage(tk.Frame):
 		else:
 			self.colorlabel.configure(text = controller.ReadyGoColor.get())
 			self.label.configure(text = "ReadyGo Move:") 
-#			self.moveLabel.configure(textvariable = controller.move) 
 			self.DoneButton.config(command = lambda : [controller.game.updateCurrent(), self.checkReadyGoValid(controller),self.LoopGame(controller)])            
 			self.ResignButton.configure(state=DISABLED)
 
 	def LoopGame(self,controller):
 		if controller.game.over:
 			return
-        if self.turn == 'Player':
+		if self.turn == 'Player':
 			'''
 			Prompts player to move
 			'''
@@ -308,15 +301,12 @@ class GamePage(tk.Frame):
 		if controller.game.over:
 			controller.winner.set(controller.game.winner)
 			controller.speaker.GameOver(controller.winner.get())  
-			controller.show_frame(GameOverPage)
+			self.GameOverWindow(controller)
             
-##		elif controller.game.board.promo:
-##			controller.show_frame(ChoosePromotionPage)
 		elif controller.game.PlayerMoveError:
 			controller.game.current = controller.game.previous
 			controller.speaker.PlayerMoveError()
 			self.PlayerMoveErrorWindow()
-#			controller.show_frame(PlayerMoveErrorPage)
 		else:
 			print('\nPlayer move: ',controller.game.chessEngine.PlayerLastMove)
 			print(controller.game.chessEngine.engBoard)
@@ -332,18 +322,14 @@ class GamePage(tk.Frame):
 		'''     
 		if controller.game.over:
 			controller.winner.set(controller.game.winner)
-			controller.speaker.GameOver(controller.winner.get())  
-			controller.show_frame(GameOverPage) 
-#		elif controller.game.isCheck:
-#			controller.speaker.inCheck()
-#			self.CheckWindow()
-#			controller.show_frame(CheckPage)
-
+			controller.speaker.GameOver(controller.winner.get()) 
+			self.GameOverWindow(controller)
 			self.turn = 'Player'
+            
 		elif controller.game.ReadyGoMoveError:
 			controller.game.current = controller.game.previous
-			controller.speaker.ReadyGoMoveError()     
-			controller.show_frame(ReadyGoMoveErrorPage)
+			controller.speaker.ReadyGoMoveError()
+			self.ReadyGoMoveErrorWindow()     
 		else:
 			print('\nReadyGo move: ',controller.game.chessEngine.ReadyGoLastMove)
 			print(controller.game.chessEngine.engBoard)
@@ -367,29 +353,18 @@ class GamePage(tk.Frame):
 		label.pack(pady = 10, padx = 10)
 		B1 = tk.Button(popup, text="Try Again", font = MED_FONT, command = popup.destroy)
 		B1.pack()
-		popup.mainloop()  
-     
+		popup.mainloop() 
         
-
-        
-class GameOverPage(tk.Frame):
-	'''
-	Shows the winner of the game
-	'''
-
-	def __init__(self,parent,controller):
-        
-		tk.Frame.__init__(self,parent)
-
-		# set label
-		label = tk.Label(self,text = "Game Over", font = LARGE_FONT)
-
-		# set dynamic label that will update with the game winner
-		self.winnerLabel = tk.Label(self, textvariable = controller.winner, font = LARGE_FONT)
-		label.pack(pady = 10, padx = 10)
-		self.winnerLabel.pack(pady = 10, padx = 10)
-#		controller.protocol("WM_DELETE_WINDOW", controller.destroy())
-
+	def GameOverWindow(self,controller):
+		'''
+		Shows the winner of the game
+		''' 
+		self.colorlabel.configure(text = "")
+		self.label.configure(text = "Game Over") 
+		self.moveLabel.configure(textvariable = controller.winner)             
+		self.DoneButton.grid_remove()       
+		self.ResignButton.grid_remove()
+            
 
 class ChessGui(tk.Frame):
     
@@ -413,10 +388,6 @@ class ChessGui(tk.Frame):
         self.W_QUEEN = PIL.Image.open("./image/w_queen.png") #15
         self.W_KING = PIL.Image.open("./image/w_king.png") #16
         
-        #self.root = tk.Toplevel()
-        #self.chessFrame = tk.Frame(self.root)
-
-
         #a 2d array that has a 1 if it is a black square and 0 if white
         self.boardSquares = [[0 for i in range(8)] for j in range(8)]
         self.gameState = [[0 for i in range(8)] for j in range(8)]
@@ -541,103 +512,6 @@ class ChessGui(tk.Frame):
         self.PopualteBoardArea(7, 6, self.W_KNIGHT)
         self.PopualteBoardArea(7, 7, self.W_ROOK)
 
-'''
-class ChoosePromotionPage(tk.Frame):
-	
-#!!	Prompts user to choose to which piece they would like to promote their pawn
-	
-
-	def __init__(self,parent,controller):
-
-		tk.Frame.__init__(self,parent)
-		label = tk.Label(self,text = "Choose your promotion")
-		label.pack(pady = 10, padx = 10)
-
-		QueenButton = tk.Button(self, text = "Queen",
-						command = lambda : [self.setQueen(controller)])
-
-		RookButton = tk.Button(self, text = "Rook",
-						command = lambda : [self.setRook(controller)])
-
-		BishopButton = tk.Button(self, text = "Bishop",
-						command = lambda : [self.setBishop(controller)])
-	
-		KnightButton = tk.Button(self, text = "Knight",
-						command = lambda : [self.setKnight(controller)])
-		QueenButton.pack()
-		RookButton.pack()
-		BishopButton.pack()
-		KnightButton.pack()
-		
-	def setQueen(self,controller):
-		
-#!!		Updates the move to UCI recognized move for promotion
-#!!		Checks validity
-		
-
-		controller.game.board.promotion = 'q'
-		controller.game.board.move = controller.game.board.move + 'q'
-		controller.game.playerPromotion(controller.game.board.move)
-
-		if controller.game.PlayerMoveError:
-			controller.game.current = controller.game.previous
-			controller.show_frame(PlayerMoveErrorPage)
-		else:
-			controller.move.set(controller.game.ReadyGoMove())
-			controller.show_frame(ReadyGoMovePage)
-	
-	def setRook(self,controller):
-		
-#!!		Updates the move to UCI recognized move for promotion
-#!!		Checks validity. Updates board
-		
-
-		controller.game.board.promotion = 'r'
-		controller.game.board.move = controller.game.board.move + 'r'
-		controller.game.playerPromotion(controller.game.board.move)
-
-		if controller.game.PlayerMoveError:
-			controller.game.current = controller.game.previous
-			controller.show_frame(PlayerMoveErrorPage)
-		else:
-			controller.move.set(controller.game.ReadyGoMove())
-			controller.show_frame(ReadyGoMovePage)
-	
-	
-	def setBishop(self,controller):
-		
-#!!		Updates the move to UCI recognized move for promotion
-#!!		Checks validity. Updates board
-		
-
-		controller.game.board.promotion = 'b'
-		controller.game.board.move = controller.game.board.move + 'b'
-		controller.game.playerPromotion(controller.game.board.move)
-
-		if controller.game.PlayerMoveError:
-			controller.game.current = controller.game.previous
-			controller.show_frame(PlayerMoveErrorPage)
-		else:
-			controller.move.set(controller.game.ReadyGoMove())
-			controller.show_frame(ReadyGoMovePage)
-	
-	def setKnight(self,controller):
-		
-#!!		Updates the move to UCI recognized move for promotion
-#!!		Checks validity. Updates board
-		
-		controller.game.board.promotion = 'n'
-		controller.game.board.move = controller.game.board.move + 'n'
-		controller.game.playerPromotion(controller.game.board.move)
-
-		if controller.game.PlayerMoveError:
-			controller.game.current = controller.game.previous
-			controller.show_frame(PlayerMoveErrorPage)
-		else:
-			controller.move.set(controller.game.ReadyGoMove())
-			controller.show_frame(ReadyGoMovePage)
-	
-'''
 
 
 app = Application()
