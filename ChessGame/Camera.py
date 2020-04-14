@@ -31,8 +31,8 @@ class Camera:
 
 				key = cv2.waitKey(1)
 				if key == ord(' '):
-					img_name = "opencvframe{}.jpg".format(Camera.img_counter)
-					cv2.imwrite(f"test_images/{img_name}", frame)
+					#img_name = "opencvframe{}.jpg".format(Camera.img_counter)
+					#cv2.imwrite(f"test_images/{img_name}", frame)
 					Camera.img_counter += 1
 					frame = cv2.rotate(frame, rotateCode=cv2.ROTATE_90_COUNTERCLOCKWISE)
 					image = frame

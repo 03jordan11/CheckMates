@@ -33,8 +33,8 @@ test_flag = False
 ```
 
 #### Running
-
-* Open a command line terminal, go to this `./Chess Game` folder 
+* Open a command line terminal, and activate the virtual environment with `source chess_env/bin/activate`
+* Go to this `./Chess Game` folder 
 * Type in command line with following code:  
 ```
 python3 OOPGUI_revised.py 
