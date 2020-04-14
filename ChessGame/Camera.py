@@ -26,6 +26,7 @@ class Camera:
 			while True:
 				check, frame = video.read()
 				frame = cv2.resize(frame, (500, 500))
+				frame = cv2.rotate(frame, cv2.ROTATE_180)
 				cv2.imshow("Capturing",frame)
 
 				key = cv2.waitKey(1)
@@ -33,7 +34,7 @@ class Camera:
 					img_name = "opencvframe{}.jpg".format(Camera.img_counter)
 					cv2.imwrite(f"test_images/{img_name}", frame)
 					Camera.img_counter += 1
-					frame = cv2.rotate(frame, rotateCode=cv2.ROTATE_90_CLOCKWISE)
+					frame = cv2.rotate(frame, rotateCode=cv2.ROTATE_90_COUNTERCLOCKWISE)
 					image = frame
 					break
 
