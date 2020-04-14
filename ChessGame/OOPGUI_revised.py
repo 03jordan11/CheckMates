@@ -19,7 +19,7 @@ SMALL_FONT = ("system", 10)
 BOLD_LAR_FONT=('Helvetica', 25, 'bold')
 BOLD_MED_FONT = ('Helvetica',18 , 'bold')
 
-test_flag = False
+test_flag = True
 
 class Application(tk.Tk):
 	'''
@@ -312,7 +312,7 @@ class GamePage(tk.Frame):
 			print(controller.game.chessEngine.engBoard)
 			controller.move.set(controller.game.ReadyGoMove())
 			playermove = str(controller.game.chessEngine.PlayerLastMove)
-			self.chessGui.MovePiece(playermove[:2], playermove[-2:])
+			self.chessGui.MovePieceUpdate(playermove)
 			self.turn = 'ReadyGo'      
 
 	def checkReadyGoValid(self,controller):
@@ -334,7 +334,7 @@ class GamePage(tk.Frame):
 			print('\nReadyGo move: ',controller.game.chessEngine.ReadyGoLastMove)
 			print(controller.game.chessEngine.engBoard)
 			readyGomove = str(controller.game.chessEngine.ReadyGoLastMove)
-			self.chessGui.MovePiece(readyGomove[:2], readyGomove[-2:])            
+			self.chessGui.MovePieceUpdate(readyGomove)          
 			self.turn = 'Player'          
       
 	def ReadyGoMoveErrorWindow(self):
@@ -459,6 +459,33 @@ class ChessGui(tk.Frame):
         if position[0] == 'h':
             col = 7
         return row, col
+
+    def MovePieceUpdate(self, move):
+        fromRow, fromColum = self.ConvertPosition(move[:2])
+        state = self.gameState[fromRow][fromColum] 
+
+        #White short side castle
+        if move == "e1g1" and state == self.W_KING :
+            self.MovePiece(move[:2], move[-2:])
+            self.MovePiece("h1", "f1") 
+
+        #White long side castle 
+        elif move == "e1c1" and state == self.W_KING :
+            self.MovePiece(move[:2], move[-2:])
+            self.MovePiece("a1", "d1")
+
+        #Black short side castle	 
+        elif move == "e8g8"and state == self.B_KING :
+            self.MovePiece(move[:2], move[-2:])
+            self.MovePiece("h8", "f8")
+
+        #Black long side castle	
+        elif move == "e8c8"and state == self.B_KING :
+            self.MovePiece(move[:2], move[-2:])
+            self.MovePiece("a8", "d8")
+		
+        else:
+            self.MovePiece(move[:2], move[-2:])  
 
     def MovePiece(self, fromPos, toPos):
         fromRow, fromColum = self.ConvertPosition(fromPos)
